@@ -1,0 +1,43 @@
+header{
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  background-color: rgb(28, 28, 28);
+  margin: 1rem;
+  padding: 1rem;
+  border-radius: 1em;
+  font-size: 1rem;
+}
+
+header nav{
+  display: flex;
+  align-items: center;
+}
+
+.button{
+  background-color: white;
+  color: black;
+  padding: 8px 4px;
+  border-radius: 0.3em;
+  border: none;
+  outline: none;
+}
+
+.data {
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+  margin-right: 4rem;
+}
+
+@media (max-width: 375px){
+  header{
+    left: 0;
+    bottom: 0;
+    margin: auto;
+    position: fixed;
+    width: 100%;
+    border-radius: 0;
+    font-size: clamp(0.8rem, 0.17vi + 0.76rem, 0.89rem);
+  }
+}
