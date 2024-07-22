@@ -15,7 +15,7 @@ const shuffle = () => {
 
   return [...images, ...images]
   .sort(() => Math.random() - 0.5)
-  .map((card, index) => ({...card, id: `card-${index}`}))
+  .map((card, index) => ({...card, id: Math.random()}))
 }
 
 export default shuffle
