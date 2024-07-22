@@ -55,6 +55,7 @@ h1 {
   gap: 1.25rem;
   position: relative;
   display: grid;
+  max-width: 800px;
   justify-items: center;
   grid-template-columns: repeat(4, auto);
 

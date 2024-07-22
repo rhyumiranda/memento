@@ -33,6 +33,7 @@ function App() {
         }, 2000)
       }
     }
+    
   }, [firstChoice, secondChoice])
 
   useEffect(() => {
@@ -51,6 +52,7 @@ function App() {
         setCards(shuffle);
       },1000)
     }
+
   }, [cards, wins])
 
   const handleClick = (card) => {
@@ -73,7 +75,10 @@ function App() {
           return {...card, matched: false};
         })
       });
-      
+      resetTurn();
+      setTurns(0);
+      setWins(0)
+      setCards(shuffle);
     }, 1000)
   }
 
