@@ -1,30 +1,94 @@
-import PWABadge from './PWABadge.jsx'
-import { useEffect, useState } from 'react'
-import Card from './Components/Card.jsx'
-import shuffle from './utilities/shuffle.js'
-import './index.css'
+import PWABadge from "./PWABadge.jsx";
+import { useEffect, useState } from "react";
+import Card from "./Components/Card.jsx";
+import shuffle from "./utilities/shuffle.js";
+import "./index.css";
 
 function App() {
   const [cards, setCards] = useState(shuffle);
-  const [flipped, setFlipped] = useState([]);
+  const [turns, setTurns] = useState(0);
+  const [wins, setWins] = useState(0);
+  const [delay, setDelay] = useState(false);
+  const [firstChoice, setFirstChoice] = useState(null);
+  const [secondChoice, setSecondChoice] = useState(null);
 
-  function handleClick(index) {
-    setFlipped([...flipped, index])
+  useEffect(() => {
+    if(firstChoice && secondChoice){
+      if(firstChoice.image === secondChoice.image){
+        setCards(( prevCards ) => {
+          return prevCards.map(( card ) => {
+            if(card.image !== firstChoice.image){
+              return card;
+            }
+            resetTurn();
+            return {...card, matched: true};
+          })
+        })
+      } else{
+        setDelay(true);
+        const timer = setTimeout(() => {
+          resetTurn();
+          console.log("3 seconds done");
+        }, 2000)
+      }
+    }
+    
+    console.log(firstChoice, secondChoice);
+  }, [firstChoice, secondChoice])
+
+  useEffect(() => {
+    const checkMatch = cards.filter(( card ) => !card.matched);
+
+    if( cards.length && checkMatch.length < 1 ){
+      console.log();
+      setWins(wins + 1);
+      resetTurn();
+      setTurns(0);
+      const timer = setTimeout(() => {
+        setCards((prevState) => {
+          return prevState.map(( card ) => {
+            return {...card, matched: false};
+          })
+        });
+        setCards(shuffle);
+      }, 1000)
+    }
+
+  }, [cards, wins])
+
+  const handleClick = (card) => {
+    if(!delay){
+      !firstChoice ? setFirstChoice(card) : setSecondChoice(card) ;
+    }
+
+    setTurns((prevState) => prevState + 1)
   }
 
-  
+  const resetTurn = () => {
+    setFirstChoice(null);
+    setSecondChoice(null);
+    setDelay(false);
+  }
+
   return (
     <>
-      <h2>Memento 🃏</h2>
-      <div className='grid'>
-          {cards.map((card, index) => {
-            const {image, id} = card;
-            return <Card key={id} image={image} selected={flipped.includes(index)} onClick={() => handleClick(index)}/>
-          })}
+      <h2>MEMENTO 🃏</h2>
+      <div className="grid">
+        {cards.map((card, index) => {
+          const { image, id, matched } = card;
+          return (
+            <Card
+              key={id}
+              image={image}
+              selected={card === firstChoice || card === secondChoice || matched}
+              onClick={() => handleClick(card)}
+            />
+          );
+        })}
       </div>
       <PWABadge />
     </>
-  )
+  );
 }
 
-export default App
+export default App;
