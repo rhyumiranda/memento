@@ -1,6 +1,7 @@
 import PWABadge from "./PWABadge.jsx";
 import { useEffect, useState } from "react";
 import Card from "./Components/Card.jsx";
+import Navbar from "./Components/Navbar/Navbar.jsx";
 import shuffle from "./utilities/shuffle.js";
 import "./index.css";
 
@@ -32,36 +33,31 @@ function App() {
         }, 2000)
       }
     }
-    
-    console.log(firstChoice, secondChoice);
   }, [firstChoice, secondChoice])
 
   useEffect(() => {
     const checkMatch = cards.filter(( card ) => !card.matched);
 
     if( cards.length && checkMatch.length < 1 ){
-      console.log();
-      setWins(wins + 1);
-      resetTurn();
-      setTurns(0);
       const timer = setTimeout(() => {
         setCards((prevState) => {
           return prevState.map(( card ) => {
             return {...card, matched: false};
           })
         });
+        setWins(wins + 1);
+        resetTurn();
+        setTurns(0);
         setCards(shuffle);
-      }, 1000)
+      },1000)
     }
-
   }, [cards, wins])
 
   const handleClick = (card) => {
     if(!delay){
       !firstChoice ? setFirstChoice(card) : setSecondChoice(card) ;
+      setTurns((prevState) => prevState + 1);
     }
-
-    setTurns((prevState) => prevState + 1)
   }
 
   const resetTurn = () => {
@@ -70,11 +66,22 @@ function App() {
     setDelay(false);
   }
 
+  const newGame = () => {
+    const timer = setTimeout(() => {
+      setCards((prevState) => {
+        return prevState.map(( card ) => {
+          return {...card, matched: false};
+        })
+      });
+      
+    }, 1000)
+  }
+
   return (
     <>
-      <h2>MEMENTO 🃏</h2>
-      <div className="grid">
-        {cards.map((card, index) => {
+      <Navbar onClick={newGame} turns={turns} wins={wins}/>
+      <main className="grid">
+        {cards.map((card) => {
           const { image, id, matched } = card;
           return (
             <Card
@@ -85,7 +92,7 @@ function App() {
             />
           );
         })}
-      </div>
+      </main>
       <PWABadge />
     </>
   );
